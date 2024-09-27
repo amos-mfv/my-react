@@ -4,18 +4,18 @@ const MyReact = () => {
   let index = 0; // index to track the current hook position
 
   const useState = (initialValue) => {
-    const locaHookIndex = index; // store the current index for this hook
+    const localHookIndex = index; // store the current index for this hook
     index++; // increment index for the next hook call
 
-    if (state[locaHookIndex] === undefined) {
-      state[locaHookIndex] = initialValue; // setting initial value for state
+    if (state[localHookIndex] === undefined) {
+      state[localHookIndex] = initialValue; // setting initial value for state
     }
 
     const setterFunction = (newState) => {
-      state[locaHookIndex] = newState; // setting new value for state
+      state[localHookIndex] = newState; // setting new value for state
     }
 
-    return [state[locaHookIndex], setterFunction];
+    return [state[localHookIndex], setterFunction];
   }
 
   // render function
