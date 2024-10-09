@@ -1,5 +1,5 @@
 const MyReact = () => {
-  let state = []; // array to store state values
+  let hooks = []; // array to store state values
 
   let index = 0; // index to track the current hook position
 
@@ -7,15 +7,42 @@ const MyReact = () => {
     const localHookIndex = index; // store the current index for this hook
     index++; // increment index for the next hook call
 
-    if (state[localHookIndex] === undefined) {
-      state[localHookIndex] = initialValue; // setting initial value for state
+    if (hooks[localHookIndex] === undefined) {
+      hooks[localHookIndex] = initialValue; // setting initial value for state
     }
 
     const setterFunction = (newState) => {
-      state[localHookIndex] = newState; // setting new value for state
+      hooks[localHookIndex] = newState; // setting new value for state
     }
 
-    return [state[localHookIndex], setterFunction];
+    return [hooks[localHookIndex], setterFunction];
+  }
+
+  const useEffect = (callback, dependencyArray) => {
+    let hasChanged = true;
+
+    const oldDependencies = hooks[index];
+
+    if (oldDependencies) {
+      hasChanged = false;
+
+      for (let i = 0; i < dependencyArray.length; i++) {
+        const dependency = dependencyArray[i];
+        const oldDependency = oldDependencies[i];
+
+        if (!Object.is(dependency, oldDependency)) {
+          hasChanged = true;
+          break;
+        }
+      }
+    }
+
+    if (hasChanged) {
+      callback();
+    }
+
+    hooks[index] = dependencyArray;
+    index++;
   }
 
   // render function
@@ -26,15 +53,20 @@ const MyReact = () => {
 
   return {
     useState,
+    useEffect,
     render,
   }
 }
 
-const { useState, render } = MyReact();
+const { useState, useEffect, render } = MyReact();
 
 const MyComponent = () => {
   const [counter, setCounter] = useState(1);
   const [isSubmit, setIsSubmit] = useState(false);
+
+  useEffect(() => {
+    console.log('effect');
+  }, []);
 
   console.log(counter);
   console.log(isSubmit);
